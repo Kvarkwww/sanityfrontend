@@ -7,7 +7,15 @@ import {
   useTriggerSanityProductSync,
 } from "../hooks/sanity";
 
-const ProductWidget = ({ data }) => {
+// Define the expected structure of the data prop
+interface ProductWidgetProps {
+  data: {
+    id: string;
+    handle: string; // Assuming handle is a string
+  };
+}
+
+const ProductWidget: React.FC<ProductWidgetProps> = ({ data }) => {
   const { mutateAsync, isPending } = useTriggerSanityProductSync(data.id);
   const { sanity_document, studio_url, isLoading } = useSanityDocument(data.id);
   const [showCodeBlock, setShowCodeBlock] = useState(false);
@@ -29,7 +37,7 @@ const ProductWidget = ({ data }) => {
           <div>
             {isLoading ? (
               "Loading..."
-            ) : sanity_document.handle === data.handle ? (
+            ) : sanity_document?.handle === data.handle ? ( // Use optional chaining
               <StatusBadge color="green">Synced</StatusBadge>
             ) : (
               <StatusBadge color="red">Not Synced</StatusBadge>
